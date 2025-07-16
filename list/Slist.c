@@ -154,17 +154,33 @@ void SListDelete(SListNode** Pphead, int pos) {
 }
 
 //链表的元素访问
-void SListFind(SListNode** Pphead,int pos){
-    assert(Pphead && pos);
-    int num = pos-1;
-    SListNode* Cur = *Pphead;
-    while (num-- && Cur != NULL)
-    {
-        Cur = Cur->next;
-    }
-    if(Cur == NULL){
-        printf("无效输入！\n");
-        return;
-    }
-    printf("第%d个元素是 %d\n",pos,Cur->data);
-}
+// void SListFind(SListNode** Pphead,int pos){
+//     assert(Pphead && pos);
+//     int num = pos-1;
+//     SListNode* Cur = *Pphead;
+//     while (num-- && Cur != NULL)
+//     {
+//         Cur = Cur->next;
+//     }
+//     if(Cur == NULL){
+//         printf("无效输入！\n");
+//         return;
+//     }
+//     printf("第%d个元素是 %d\n",pos,Cur->data);
+// }
+// SListNode* SListFind(SListNode** Pphead,SLDataType Val){
+//     assert(Pphead);
+//     SListNode* Cur = *Pphead;
+//     if(*Pphead == NULL){
+//         printf("空链表\n");
+//         return NULL;
+//     }
+//     while (Cur!=NULL)
+//     {
+//         if(Cur->data == Val){
+//             return Cur;
+//         }
+//         Cur = Cur->next;
+//     }
+//     return NULL;
+// }
