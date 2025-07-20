@@ -29,7 +29,7 @@ void QueuePush(Queue* pq, QeDataType x){
     NewNode->next=NULL;
     NewNode->_data = x;
     if(pq->_head == NULL){
-        pq->_head = pq->_tail = (QueueNode*)malloc(sizeof(QueueNode));
+        pq->_head = pq->_tail = NewNode;
     }
     else{
         pq->_tail->next = NewNode;

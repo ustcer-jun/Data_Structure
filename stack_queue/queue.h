@@ -3,9 +3,11 @@
 #include<stdlib.h>
 #include<assert.h>
 
-//利用单向链表的形式实现栈
-typedef int QeDataType;
+// extern struct BTNode; //声明一下
+struct BTNode; // 正确的前向声明
 
+//利用单向链表的形式实现栈
+typedef struct BTNode* QeDataType;
 
 typedef struct QueueNode
 {
