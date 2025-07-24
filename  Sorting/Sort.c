@@ -41,6 +41,21 @@ void Insert_Sort(int* arr,int size){
         }
     }
 }
+// void Insert_Sort(int* arr, int size) {
+//     assert(arr);
+//     for (int i = 1; i < size; i++) {
+//         int key = arr[i];         // 记录待插入元素
+//         int j = i - 1;
+
+//         // 向前寻找插入位置，同时右移元素
+//         while (j >= 0 && arr[j] > key) {
+//             arr[j + 1] = arr[j];  // 后移元素
+//             j--;
+//         }
+
+//         arr[j + 1] = key;         // 插入元素
+//     }
+// }
 
 void Shell_Sort(int* arr,int size){
     assert(arr);
@@ -245,12 +260,111 @@ int PartSort3(int* arr,int left,int right){
 
 void QuickSort(int* arr,int left,int right){
     assert(arr);
-    if(left<right){
+    if(left>=right){
+        return;
+    }
+
+    ///小序列优化，当小序列我们不需要开辟栈，不使用快排。
+    //小序列可以使用插入排序
+    if((right-left+1)>15){
         int div = PartSort3(arr,left,right);
         QuickSort(arr,left,div-1);
         QuickSort(arr,div+1,right);
     }
+    else{
+        Insert_Sort(arr+left,right-left+1);
+    }
 }
+void QuickSort_stack(int* arr,int left,int right){
+    assert(arr);
+    if(left>=right){
+        return;
+    }
+    int size = right+1;
+    int* stack  = (int*)malloc(2*size*sizeof(int));//建立栈
+    int top = 0;
+    //先入左边，再入右边
+    stack[top++] = left;
+    stack[top++] = right;
+    while (top>0)
+    {
+        // 先进后出，所以先出右边
+        int right  = stack[--top]; //注意 -- 的用法
+        int left  = stack[--top];
+        if(left<right){
+            int div = PartSort2(arr,left,right); //利用分而治之的思想
+            if(left<div-1){
+                stack[top++] = left;
+                stack[top++] = div-1;
+            }
+            if(div+1<right){
+                stack[top++] = div+1;
+                stack[top++] = right;
+            }
+        }
+    }
+}
+void Merge_Arr(int* arr,int begin1,int end1,int begin2,int end2,int* tmp){
+    int index = begin1;
+    int left = begin1;
+    int right = end2;
+    while (begin1 <= end1 && begin2 <= end2)
+    {
+        if(arr[begin1]<arr[begin2]){
+            tmp[index++] = arr[begin1++];
+        }
+        else{
+            tmp[index++] = arr[begin2++];
+        }
+    }
+    while (begin1 <= end1 )
+    {
+        tmp[index++] = arr[begin1++];
+    }
+    while (begin2 <= end2 )
+    {
+        tmp[index++] = arr[begin2++];
+    }
+    for(int i = left;i<=right;i++){
+        arr[i] = tmp[i];
+    }
+}
+
+
+//利用递归归并排序，时间复杂度为o(nlogn),空间复杂度为o(N);
+void _Merge_Sort(int* arr,int left,int right,int* tmp){
+    if(left>=right){
+        return;
+    }
+    //分解
+    assert(arr && tmp);
+    int mid  = (left+right)/2;
+    _Merge_Sort(arr,left,mid,tmp);
+    _Merge_Sort(arr,mid+1,right,tmp);
+    //递归分解序列直到无法分解。
+
+    //归并
+    Merge_Arr(arr,left,mid,mid+1,right,tmp);
+}
+
+
+void Merge_Sort(int* arr,int size){
+    //用于存储归并之后的数据
+    int* tmp = (int*)malloc(size*sizeof(arr));
+    int left = 0;int right = size-1;
+    //用于归并排序，参数包括，数组的左右节点
+    _Merge_Sort(arr,left,right,tmp);
+}
+
+void Merge_Sort_NonR(int* arr,int size){
+    assert(arr);
+    //用于存储归并之后的数据
+    int* tmp = (int*)malloc(size*sizeof(arr));
+    int left = 0;int right = size-1;
+    //用于归并排序，参数包括，数组的左右节点
+    _Merge_Sort(arr,left,right,tmp);
+}
+
 
 
 int main(){
@@ -258,7 +372,7 @@ int main(){
     // Bubble_sort(arr,9);
     // Shell_Sort(arr,9);
     // Select_Sort(arr,9);
-    QuickSort(arr,0,11);
+    Merge_Sort(arr,12);
     for(int i = 0;i<12;i++){
         printf("%d ",arr[i]);
     }
