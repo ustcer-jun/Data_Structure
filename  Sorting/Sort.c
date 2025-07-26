@@ -360,19 +360,138 @@ void Merge_Sort_NonR(int* arr,int size){
     assert(arr);
     //用于存储归并之后的数据
     int* tmp = (int*)malloc(size*sizeof(arr));
-    int left = 0;int right = size-1;
-    //用于归并排序，参数包括，数组的左右节点
-    _Merge_Sort(arr,left,right,tmp);
+    int gap = 1;
+    while (gap<size)
+    {
+        for(int i =0;i<size;i+=2*gap){
+            int begin1 = i; int end1 = i+gap-1;
+            int begin2 = i+gap; int end2 = i+2*gap-1;
+            if(begin2>=size){
+                break;
+            }
+            if(end2>=size){
+                end2 = size-1;
+            }
+            Merge_Arr(arr,begin1,end1,begin2,end2,tmp);
+        }
+        gap*=2;
+    }
+    
 }
 
+// void Merge_arr(int*arr,int begin1,int end1,int begin2,int end2,int* tmp){
+//     int index = begin1; 
+//     int left = begin1;
+//     int right = end2;
+//     while (begin1 <= end1 && begin2 <= end2)
+//     {    
+//         if(arr[begin1]<=arr[begin2]){
+//             tmp[index++] = arr[begin1++];
+//         }
+//         else{
+//             tmp[index++] = arr[begin2++];
+//         }
+//     }
+//     while (begin1 <= end1)
+//     {
+//         tmp[index++] = arr[begin1++];
+//     }
+//     while (begin2 <= end2)
+//     {
+//         tmp[index++] = arr[begin2++];
+//     }
+//     //把排好序的元素放回arr
+//     for(int j =left;j<=right;j++){
+//         arr[j] = tmp[j];
+//     }
+// }
+
+// void _Merge_Sort(int*arr,int left,int right,int* tmp){
+//     assert(tmp);
+//     if(left>=right){
+//         return;
+//     }
+
+//     int mid = (left+right)/2;
+//     int begin1= left; int end1 = mid;
+//     int begin2= mid+1; int end2 = right;
+//     int index = left;
+//     _Merge_Sort(arr,left,mid,tmp); //递归分解，归并
+//     _Merge_Sort(arr,mid+1,right,tmp);
+//     Merge_arr(arr,begin1,end1,begin2,end2,tmp);
+// }
+
+// void Merge_Sort(int* arr,int size){
+//     assert(arr);
+//     int* tmp = (int*)malloc(size*sizeof(int));
+//     int left = 0;
+//     int right = size-1;
+//     _Merge_Sort(arr,left,right,tmp);
+//     free(tmp);
+// }
+
+// void Merge_SortNonR(int* arr,int size){
+//     assert(arr);
+//     int* tmp = (int*)malloc(size*sizeof(int));
+//     int left = 0;
+//     int right = size-1;
+//     int gap = 1;
+//     while (gap<size)
+//     {
+//         for(int i = 0;i<=right;i+=2*gap){
+//             int begin1 = i;
+//             int end1 = i+gap-1;
+//             int begin2 = i+gap;
+//             int end2 = i+2*gap-1;
+//             if(begin2>right){
+//                 break;
+//             }
+//             if(end2>right){
+//                 end2 = right;
+//             }
+//             Merge_arr(arr,begin1,end1,begin2,end2,tmp);
+//         }
+//         gap*=2;
+//     }
+//     free(tmp);
+// }
+
+void Count_Sort(int* arr,int size){
+    assert(arr);
+    int min = arr[0];
+    int max = arr[0];
+    for(int i = 1;i<size;i++){
+        if(arr[i]<min){
+            min = arr[i];
+        }
+        if(arr[i]>max){
+            max = arr[i];
+        }
+    }
+    int Range = max-min+1;int index = 0;
+    int* Count_Arr = (int*)calloc(Range,sizeof(int));
+    for(int i = 0;i<size;i++){
+        Count_Arr[arr[i]-min]++;
+    };
+    for(int j = 0;j<Range;j++){
+        while (Count_Arr[j]--)
+        {
+            arr[index++] = min+j;
+        }
+        
+    }
+    return;
+}
 
 
 int main(){
     int arr[]= {6,2,8,10,1,3,5,5,5,5,12,4};
+    //int arr[] = {10,6,7,1,3,9,4,2};
     // Bubble_sort(arr,9);
     // Shell_Sort(arr,9);
     // Select_Sort(arr,9);
-    Merge_Sort(arr,12);
+    // Merge_Sort_NonR(arr,12);
+    Count_Sort(arr,12);
     for(int i = 0;i<12;i++){
         printf("%d ",arr[i]);
     }
